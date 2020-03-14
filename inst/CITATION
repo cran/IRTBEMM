@@ -1,0 +1,28 @@
+citHeader("To cite the package 'IRTBEMM' in publications use:")
+
+citEntry(entry = "Manual",
+         title        = "{IRTBEMM: Family of Bayesian EMM Algorithm for Item Response Models}",
+         author       = personList(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L Kern")
+                                  ),
+         year         = 2019,
+         textVersion  = paste("Shaoyang, G., Chanjin Z., & Justin L Kern (2019)",
+                              "IRTEMM: Family of Bayeisan EMM Algorithm for Item Response Models.",
+                              "URL https://cran.r-project.org/package=IRTBEMM.")
+)
+
+citEntry(entry  = "Article",
+         title  = "The Bayesian Expectation-Maximization-Maximization for the 3PLM",
+         author = c(as.person("Shaoyang Guo"), as.person("Chanjin Zheng")),
+         journal= "Frontiers in Psychology",
+         year   = "2019",
+         volume = "10",
+         number = "1175",
+         pages  = "1--11",
+         doi    = "10.3389/fpsyg.2019.01175",
+         url    = "http://dx.doi.org/10.3389/fpsyg.2019.01175",
+    textVersion = paste("Shaoyang, G. & Chanjin Z. (2019).",
+                         "The Bayesian Expectation-Maximization-Maximization for the 3PLM,",
+                         "Frontiers in Psychology, 10, 1175.",
+                         "DOI: 10.3389/fpsyg.2019.01175.")
+)
+

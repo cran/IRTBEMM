@@ -1,0 +1,182 @@
+\name{BE3M.4PL}
+\alias{BE3M.4PL}
+\title{
+Calibrating 4PL model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm.
+}
+\description{
+This function can estimate the item parameters of the 4PL model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm proposed by Zhang, Guo, & Zheng (2018, April). Both Bayesan modal estimates and maximum likelihood estimates are available. In addition, the examinees' ability and a few model fits information can be also obtained through this function.
+}
+\usage{
+BE3M.4PL(data, PriorA = c(0, 0.25), PriorB = c(0, 4), PriorC = c(4, 16), 
+	PriorS = c(4, 16), InitialA = NA, InitialB = NA, InitialC = NA, 
+	InitialS = NA, Tol = 0.001, max.ECycle = 2000L, max.MCycle = 30L, 
+	n.decimal = 3L, n.Quadpts = 31L, Theta.lim = c(-6, 6), 
+	Missing = -9, ParConstraint = FALSE)
+}
+\arguments{
+\item{data}{
+A \code{matrix} or \code{data.frame} consists of dichotomous data (1 for correct and 0 for wrong response), with missing data coded as in Missing (by default, Missing=-9). Each row of data represents a examinne' responses, and each column represents an item.
+}
+\item{PriorA}{The user specified \strong{logarithmic normal distribution} prior for item discrimation (\emph{a}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{numeric} with two hyperparameters mean and variance of logarithmic normal distribution for all \emph{a} parameters. By default, PriorA=c(0,0.25), which means a log normal prior of mean=0 and variance=0.25 will be used for all item discrimation parameters.
+\item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for item discrimation parameter will be obtained.
+\item A \code{matrix} with two columns, and each row of matrix consists of two hyperparameters of log normal prior (mean and variance) for single item \emph{a} parameter.
+}
+}
+\item{PriorB}{
+The user specified \strong{normal distribution} prior for item difficulty (\emph{b}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{numeric} with two hyperparameters mean and variance of normal distribution for all \emph{b} parameters. By default, PriorB=c(0,4), which means a normal prior of mean=0 and variance=4 will be used for all item difficulty parameters.
+\item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for item difficulty parameter will be obtained.
+\item A \code{matrix} with two columns, and each row of matrix consists of two hyperparameters of normal prior (mean and variance) for single item \emph{b} parameter.
+}
+}
+\item{PriorC}{
+The user specified \strong{Beta(x,y) distribution} prior for item guessing (\emph{c}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{numeric} with two hyperparameters x and y of Beta distribution for all \emph{c} parameters. By default, PriorC=c(4,16), which means a Beta prior of mean=4/(4+16)=0.2 and variance=0.008 will be used for all item guessing parameters.
+\item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for item guessing parameter will be obtained.
+\item A \code{matrix} with two columns, and each row of matrix consists of two hyperparameters of Beta prior (x and y) for single item \emph{c} parameter.
+}
+}
+\item{PriorS}{
+The user specified \strong{Beta(x,y) distribution} prior for item slipping (\emph{s}) parameters in the 4PL model. Can be:
+\itemize{	
+\item A \code{numeric} with two hyperparameters x and y of Beta distribution for all \emph{s} parameters. By default, PriorS=c(4,16), which means a Beta prior of mean=4/(4+16)=0.2 and variance=0.008 will be used for all item slipping parameters.
+\item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for item slipping parameter will be obtained.
+\item A \code{matrix} with two columns, and each row of matrix consists of two hyperparameters of Beta prior (x and y) for single item \emph{s} parameter.
+}
+}
+\item{InitialA}{
+The user specified starting values for item discrimation (\emph{a}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{NA} (default), refers to no specified starting values for \emph{a} parameter.
+\item A single number (\code{numeric}), refers to set this number to be the starting values of \emph{a} for all items.
+\item A \code{numeric} consists of starting values for each \emph{a} parameter.
+}
+}
+\item{InitialB}{
+The user specified starting values for item difficulty (\emph{b}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{NA} (default), refers to no specified starting values for \emph{b} parameter.
+\item A single number (\code{numeric}), refers to set this number to be the starting values of \emph{b} for all items.
+\item A \code{numeric} consists of starting values for each \emph{b} parameter.
+}
+}
+\item{InitialC}{
+The user specified starting values for item guessing (\emph{c}) parameters in the 3PL and 4PL models. Can be:
+\itemize{	
+\item A \code{NA} (default), refers to no specified starting values for \emph{c} parameter.
+\item A single number (\code{numeric}), refers to set this number to be the starting values of \emph{c} for all items.
+\item A \code{numeric} consists of starting values for each \emph{c} parameter.
+}
+}
+\item{InitialS}{
+The user specified starting values for item slipping (\emph{s}) parameters in the 4PL model. Can be:
+\itemize{	
+\item A \code{NA} (default), refers to no specified starting values for \emph{s} parameter.
+\item A single number (\code{numeric}), refers to set this number to be the starting values of \emph{s} for all items.
+\item A \code{numeric} consists of starting values for each \emph{s} parameter.
+}
+}
+\item{Tol}{
+A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.001.
+}
+\item{max.ECycle}{
+A single \code{integer}, refers to maximum number of E-step cycles; defaults are 2000L.
+}
+\item{max.MCycle}{
+A single \code{integer}, refers to maximum number of M-step cycles; defaults are 30L.
+}
+\item{n.Quadpts}{
+A single \code{integer}, refers to number of quadrature points per dimension (must be larger than 5); defaults are 31L.
+}
+\item{n.decimal}{
+A single \code{integer}, refers to number of decimal places when outputs results.
+}
+\item{Theta.lim}{
+A \code{numeric} with two number, refers to the range of integration grid for each dimension; default is c(-6, 6).
+}
+\item{Missing}{
+A single number (\code{numeric}) to indicate which elements are missing; default is -9. The Missing cannot be 0 or 1.
+}
+\item{ParConstraint}{
+A logical value to indicate whether estimates parametes in a reasonable range; default is FALSE. If ParConstraint=TRUE: \emph{a} in [0.001, 6], \emph{b} in [-6, 6], \emph{c} in [0.0001, 0.5], \emph{s} in [0.0001, 0.5].
+}
+}
+\details{
+Four parameter logistic (4PL) model proposed by Barton & Lord's (1981). Transfer the unslipping (upper asymptote) parameter \emph{d} to slipping parameter \emph{s} by set \emph{s=1-d}:
+\deqn{P(x = 1|\theta, a, b, c, s) = c + (1 - s - c) / (1 + exp(-D * a * (\theta - b))),}
+where x=1 is the correct response; \emph{theta} is examinne's ability. \emph{a}, \emph{b}, \emph{c} and \emph{s} are the item discrimination, difficulty guessing and slipping parameter, respectively; D is the scaling constant 1.702.
+These parameter labels are \strong{capitalized} in program for emphasis.  
+}
+\value{
+This function will return a list includes following:
+\describe{
+\item{Est.ItemPars}{A \code{dataframe} consists of the estimates of \emph{a}, \emph{b}, \emph{c} and \emph{s} parameters and corresponding estimated standard errors.}
+\item{Est.Theta}{A \code{dataframe} consists of the estimates of \emph{theta} and corresponding estimated standard errors (EAP method).}
+\item{Loglikelihood}{The loglikelihood.}
+\item{Iteration}{The number of iterations.}
+\item{EM.Map}{The parameter estimation history of iterations.}
+\item{fits.test}{The model fits information includes G2 test, AIC, BIC and RMSEA.}
+\item{Elapsed.time}{The running time of the program.}
+}
+}
+\references{
+Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the three-parameter logistic item response model. \emph{ETS Research Report Series}, \emph{1981}(1), 1-8. \doi{10.1002/j.2333-8504.1981.tb01255.x}
+
+Zhang, C., Guo, S., & Zheng, C. (2018, April). \emph{Bayesian Expectation-Maximization-Maximization Algorithm for the 4PLM}. Paper presented at the 80th NCME Annual Meeting, New York, NY. 
+
+}
+
+\examples{
+###Example: A brief simulation study###
+
+#generate true values and response matrix
+set.seed(10)
+library(IRTBEMM)
+I=2500    #set the number of examinees is 2500
+J=10      #set the number of items is 10
+true.a=runif(J,0.4,2)     #simulate true discrimination parameters
+true.b=rnorm(J,0,1)       #simulate true difficulty parameters
+true.c=rbeta(J,2,8)       #simulate true guessing parameters
+true.s=rbeta(J,2,8)       #simulate true slipping parameters
+true.th=rnorm(I,0,1)      #simulate true theta parameters
+true.par=list(A=true.a, B=true.b, C=true.c, S=true.s)   #make a list
+response=matrix(NA,I,J)       #Create a array to save response data
+for (i in 1:I){
+  #calucate the probability of 4PL
+  P=Prob.model(X=true.th[i], Model='4PL', Par.est0=true.par, D=1.702)  
+  response[i,]=rbinom(J,1,P)   #simulate the response
+}
+
+#To save example running time, we set the Tol to 0.1
+#Obtain the Bayesian modal estimation (BME) using default priors
+
+#Estimate model via BE3M algorithm
+bme.res=BE3M.4PL(response, Tol=0.1) 
+
+bme.res$Est.ItemPars       #show item estimates
+bme.res$Est.Theta          #show ability estimates
+bme.res$Loglikelihood      #show log-likelihood
+bme.res$EM.Map             #show EM iteration history
+bme.res$fits.test 		   #show model fits information
+
+
+#Obtain the maximum likelihood estimation (MLE) by setting Prior=NA
+
+#Estimate model via E3M algorithm
+mle.res=BE3M.4PL(response, Tol=0.1,
+		PriorA=NA, PriorB=NA, PriorC=NA, PriorS=NA)
+
+mle.res$Est.ItemPars       #show item estimates
+mle.res$Est.Theta          #show ability estimates
+mle.res$Loglikelihood      #show log-likelihood
+mle.res$EM.Map             #show EM iteration history
+mle.res$fits.test 		   #show model fits information
+
+
+}
+
+
