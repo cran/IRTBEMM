@@ -1,5 +1,18 @@
 citHeader("To cite the package 'IRTBEMM' in publications use:")
 
+citEntry(entry  = "Article",
+         title  = "IRTBEMM: An R Package for Estimating IRT Models With Guessing or Slipping Parameters",
+         author = c(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L. Kern")),
+         journal= "Applied Psychological Measurement",
+         year   = "2020",
+         doi    = "10.1177/0146621620932654",
+         url    = "http://dx.doi.org/10.1177/0146621620932654",
+    textVersion = paste("Shaoyang G., Chanjin Z. & Justin L. K, (2020).",
+                         "IRTBEMM: An R Package for Estimating IRT Models With Guessing or Slipping Parameters,",
+                         "Applied Psychological Measurement,",
+                         "DOI: 10.1177/0146621620932654")
+)
+
 citEntry(entry = "Manual",
          title        = "{IRTBEMM: Family of Bayesian EMM Algorithm for Item Response Models}",
          author       = personList(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L Kern")
@@ -7,22 +20,9 @@ citEntry(entry = "Manual",
          year         = 2019,
          textVersion  = paste("Shaoyang, G., Chanjin Z., & Justin L Kern (2019)",
                               "IRTEMM: Family of Bayeisan EMM Algorithm for Item Response Models.",
-                              "URL https://cran.r-project.org/package=IRTBEMM.")
+                              "URL https://cran.r-project.org/package=IRTBEMM")
 )
 
-citEntry(entry  = "Article",
-         title  = "The Bayesian Expectation-Maximization-Maximization for the 3PLM",
-         author = c(as.person("Shaoyang Guo"), as.person("Chanjin Zheng")),
-         journal= "Frontiers in Psychology",
-         year   = "2019",
-         volume = "10",
-         number = "1175",
-         pages  = "1--11",
-         doi    = "10.3389/fpsyg.2019.01175",
-         url    = "http://dx.doi.org/10.3389/fpsyg.2019.01175",
-    textVersion = paste("Shaoyang, G. & Chanjin Z. (2019).",
-                         "The Bayesian Expectation-Maximization-Maximization for the 3PLM,",
-                         "Frontiers in Psychology, 10, 1175.",
-                         "DOI: 10.3389/fpsyg.2019.01175.")
-)
+
+
 

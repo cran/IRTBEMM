@@ -1,8 +1,8 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-//BE3M function for 4PLM
-void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH, 
+//BEMM function for 4PLM
+void BEMM4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH, 
 			  double *IA, double *IB, double *IC, double *IS, double *IAB, 
 			  double *TA, double *TB, double *TC, double *TS, 
 			  double *deltahat_A, double *deltahat_B, double *deltahat_C, double *deltahat_S,
@@ -185,15 +185,15 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 					lbb_core += wsf;          			//lbb: (f*ws)
 					lab_core += wsf * x_bt;   			//lab: wsf*(x-bt)
 				}
-				la1 = D * la1_core;
+				la1 = Da * la1_core;
 				lb1 = -Da * lb1_core;
-				laa = -D *D * laa_core;
+				laa = -D2a2 * laa_core;
 				lbb = -D2a2 * lbb_core;
-				lab = D* Da * lab_core;
+				lab = D2a2 * lab_core;
 				// Maximize a and b
 				if (PriorA[j]!=-9 && PriorA[j + J]!=-9) {
-					la1 += - 1/(at0) * ((log(at0)-PriorA[j]+PriorA[j + J])/PriorA[j + J]);
-					laa += - (1/(at0 * at0)) * (( 1 - log(at0) + PriorA[j] - PriorA[j + J]) / PriorA[j + J]);
+					la1 += -((log(at0)-PriorA[j])/PriorA[j + J]);
+					laa += -1/PriorA[j + J];
 				}
 				if (PriorB[j]!=-9 && PriorB[j + J]!=-9) {
 					lb1 += -((bt0-PriorB[j])/PriorB[j + J]);
@@ -205,19 +205,19 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 				Iab = lab / Weight;
 				Icc = - 1 / lcc;
 				Iss = - 1 / lss;
-				at1 = at0 + (Iaa * la1 + Iab * lb1);
+				at1 = log(at0) + (Iaa * la1 + Iab * lb1);
 				bt1 = bt0 + (Ibb * lb1 + Iab * la1);
 				la1_core = 0;
 				lb1_core = 0;
 				laa_core = 0;
 				lbb_core = 0;
 				lab_core = 0;
-				if (sqrt(pow(at1-at0, 2) + pow(bt1-bt0, 2)) < 0.01){
+				if (sqrt(pow(at1-log(at0), 2) + pow(bt1-bt0, 2)) < 0.01){
 					M_exit = 0;
-					at0 = at1;
+					at0 = exp(at1);
 					bt0 = bt1;
 				} else{
-					at0 = at1;
+					at0 = exp(at1);
 					bt0 = bt1;
 					n_MCycle += 1;
 				}
@@ -340,13 +340,24 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 	double delta[6]={0};
 	double delta0[6]={0};
 	double delta1[6]={0};
+	int cr_SEM=n_ECycle[0];
+	double cr_SEM0=1;
 	double cr_SEM1=1;
 	double cr_SEM2=1;
 	double cr_SEM3=1;
 	double cr_SEM4=1;
-	if (n_ECycle[0]>=10){
-		start_SEM=floor(n_ECycle[0] * 0.2);
-		end_SEM=floor(n_ECycle[0] * 0.8);
+	double deltatemp;
+	
+	for (i = 0; i<=cr_SEM; i++){
+		deltatemp=exp(-(LH[i+1]-LH[i]));
+		if (deltatemp>=0.9 && deltatemp<=0.999){
+			if (cr_SEM0==0){
+				end_SEM=i;
+			}else{
+				start_SEM=i;
+				cr_SEM0=0;
+			}
+		}
 	}
 	for (jj = 0; jj < J; jj++) {
 		z=start_SEM;
@@ -358,16 +369,16 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 		while (SEM_exit && z<=end_SEM){
 			mm = jj + J * z;
 			for (ParClass = 1; ParClass <= 4; ParClass++){
-				if (ParClass==1 && z>=2 && cr_SEM1<0.01){
+				if (ParClass==1 && z>=2 && cr_SEM1<0.0001){
 					continue;
 				}
-				if (ParClass==2 && z>=2 && cr_SEM2<0.01){
+				if (ParClass==2 && z>=2 && cr_SEM2<0.0001){
 					continue;
 				}
-				if (ParClass==3 && z>=2 && cr_SEM3<0.01){
+				if (ParClass==3 && z>=2 && cr_SEM3<0.0001){
 					continue;
 				}
-				if (ParClass==4 && z>=2 && cr_SEM4<0.01){
+				if (ParClass==4 && z>=2 && cr_SEM4<0.0001){
 					continue;
 				}
 				for (j = 0; j < J; j++){
@@ -499,15 +510,15 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 							lbb_core += wsf;          			//lbb: (f*ws)
 							lab_core += wsf * x_bt;   			//lab: wsf*(x-bt)
 						}
-						la1 = D * la1_core;
+						la1 = Da * la1_core;
 						lb1 = -Da * lb1_core;
-						laa = -D *D * laa_core;
+						laa = -D2a2 * laa_core;
 						lbb = -D2a2 * lbb_core;
-						lab = D* Da * lab_core;
+						lab = D2a2 * lab_core;
 						// Maximize a and b
-						if (PriorA[jj]!=-9 && PriorA[jj + J]!=-9) {
-							la1 += - 1/(at0) * ((log(at0)-PriorA[jj]+PriorA[jj + J])/PriorA[jj + J]);
-							laa += - (1/(at0 * at0)) * (( 1 - log(at0) + PriorA[jj] - PriorA[jj + J]) / PriorA[jj + J]);
+						if (PriorA[j]!=-9 && PriorA[j + J]!=-9) {
+							la1 += -((log(at0)-PriorA[j])/PriorA[j + J]);
+							laa += -1/PriorA[j + J];
 						}
 						if (PriorB[jj]!=-9 && PriorB[jj + J]!=-9) {
 							lb1 += -((bt0-PriorB[jj])/PriorB[jj + J]);
@@ -519,19 +530,19 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 						Iab = lab / Weight;
 						Icc = - 1 / lcc;
 						Iss = - 1 / lss;
-						at1 = at0 + (Iaa * la1 + Iab * lb1);
+						at1 = log(at0) + (Iaa * la1 + Iab * lb1);
 						bt1 = bt0 + (Ibb * lb1 + Iab * la1);
 						la1_core = 0;
 						lb1_core = 0;
 						laa_core = 0;
 						lbb_core = 0;
 						lab_core = 0;
-						if (sqrt(pow(at1-at0, 2) + pow(bt1-bt0, 2)) < 0.01){
+						if (sqrt(pow(at1-log(at0), 2) + pow(bt1-bt0, 2)) < 0.01){
 							M_exit = 0;
-							at0 = at1;
+							at0 = exp(at1);
 							bt0 = bt1;
 						} else{
-							at0 = at1;
+							at0 = exp(at1);
 							bt0 = bt1;
 							n_MCycle += 1;
 						}
@@ -552,18 +563,17 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 				}
 				switch (ParClass){
 					case 1:
-						delta1[0]=(deltahat_A[jj]-A[jj])/(TA[mm]-A[jj]);
-						delta1[1]=(deltahat_B[jj]-B[jj])/(TA[mm]-A[jj]);
+						delta1[0]=(log(deltahat_A[jj])-log(A[jj]))/(log(TA[mm])-log(A[jj])+0.0001);
+						delta1[1]=(deltahat_B[jj]-B[jj])/(log(TA[mm])-log(A[jj])+0.0001);
 						break;
 					case 2:
-						delta1[2]=(deltahat_A[jj]-A[jj])/(TB[mm]-B[jj]);
-						delta1[3]=(deltahat_B[jj]-B[jj])/(TB[mm]-B[jj]);
-						break;
+						delta1[2]=(log(deltahat_A[jj])-log(A[jj]))/(TB[mm]-B[jj]+0.0001);
+						delta1[3]=(deltahat_B[jj]-B[jj])/(TB[mm]-B[jj]+0.0001);
 					case 3:
-						delta1[4]=(deltahat_C[jj]-C[jj])/(TC[mm]-C[jj]);   
+						delta1[4]=(deltahat_C[jj]-C[jj])/(TC[mm]-C[jj]+0.0001);   
 						break;
 					case 4:
-						delta1[5]=(deltahat_S[jj]-S[jj])/(TS[mm]-S[jj]);   
+						delta1[5]=(deltahat_S[jj]-S[jj])/(TS[mm]-S[jj]+0.0001);   
 						break;							
 				}
 			}
@@ -571,7 +581,7 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 			cr_SEM2=sqrt(pow(delta1[2]-delta0[2],2)+pow(delta1[3]-delta0[3],2));
 			cr_SEM3=fabs(delta1[4]-delta0[4]);
 			cr_SEM4=fabs(delta1[5]-delta0[5]);
-			if (cr_SEM1<0.01 && cr_SEM2<0.01 && cr_SEM3<0.01 && cr_SEM4<0.01 && z>=2){
+			if (cr_SEM1<0.0001 && cr_SEM2<0.0001 && cr_SEM3<0.0001 && cr_SEM4<0.0001 && z>=2){
 				SEM_exit=0;
 			}else{
 				z=z+1;
@@ -595,16 +605,20 @@ void BE3M4PL(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 		delta1[3] =  delta[0] / Weight;
 		delta1[4] =  1 / delta[4];
 		delta1[5] =  1 / delta[5];
-		if (isnormal(delta1[0])==0){delta1[0] = 1;}
-		if (isnormal(delta1[1])==0){delta1[1] = 0;}
-		if (isnormal(delta1[2])==0){delta1[2] = 0;}
-		if (isnormal(delta1[3])==0){delta1[3] = 1;}
-		if (isnormal(delta1[4])==0){delta1[4] = 1;}
-		if (isnormal(delta1[5])==0){delta1[5] = 1;}
-		SEA[jj]= sqrt(fabs(IA[jj] * delta1[0] + IAB[jj] * delta1[2]));
-        SEB[jj]= sqrt(fabs(IB[jj] * delta1[3] + IAB[jj] * delta1[1]));
-        SEC[jj]= sqrt(fabs(IC[jj] * delta1[4]));
-		SES[jj]= sqrt(fabs(IS[jj] * delta1[5]));
+		if (isnormal(delta1[0])==0 || delta1[0]<=0){delta1[0] = 1;}
+		if (isnormal(delta1[1])==0 || delta1[1]<=0){delta1[1] = 0;}
+		if (isnormal(delta1[2])==0 || delta1[2]<=0){delta1[2] = 0;}
+		if (isnormal(delta1[3])==0 || delta1[3]<=0){delta1[3] = 1;}
+		if (isnormal(delta1[4])==0 || delta1[4]<=0){delta1[4] = 1;}
+		if (isnormal(delta1[5])==0 || delta1[5]<=0){delta1[5] = 1;}
+		SEA[jj]= sqrt(A[jj] * A[jj] * IA[jj] * delta1[0] + IAB[jj] * delta1[2]);
+        SEB[jj]= sqrt(IB[jj] * delta1[3] + IAB[jj] * delta1[1]);
+        SEC[jj]= sqrt(IC[jj] * delta1[4]);
+		SES[jj]= sqrt(IS[jj] * delta1[5]);
+		if (SEA[jj]>1){SEA[jj]= sqrt(A[jj] * A[jj] * IA[jj]);}
+		if (SEB[jj]>1){SEB[jj]= sqrt(IB[jj]);}
+		if (SEC[jj]>1){SEC[jj]= sqrt(IC[jj]);}
+		if (SES[jj]>1){SES[jj]= sqrt(IS[jj]);}
 	}
 	n_ECycle[0] = n_ECycle[0] + 1;
 }

@@ -33,7 +33,7 @@ Input.Checking <- function(Model,
 							PriorB=c(0,4), 
 							PriorC=c(4,16), 
 							PriorS=c(4,16), 
-							PriorAlpha=c(4,16), 
+							PriorAlpha=c(-1.9,1), 
 							PriorBeta=c(0,4), 
 							PriorGamma=c(-1.39,0.25), 
 							InitialA=NA, 
@@ -43,9 +43,9 @@ Input.Checking <- function(Model,
 							InitialAlpha=NA, 
 							InitialBeta=NA, 
 							InitialGamma=NA, 
-							Tol=0.001, 
+							Tol=0.0001, 
 							max.ECycle=1000L, 
-							max.MCycle=30L, 
+							max.MCycle=100L, 
 							n.Quadpts=31L, 
 							n.decimal=3L,
 							Theta.lim=c(-6,6), 
@@ -253,9 +253,9 @@ Input.Checking <- function(Model,
   if (Model=='1PLAG' | Model=='1PLG'){
     ###Checking Variable PriorAlpha###
     if (Model=='1PLAG'){
-      if (is.numeric(PriorAlpha) & length(PriorAlpha)==2 & is.na(sum(PriorAlpha))==FALSE){  #Whether PriorAlpha=c(4,16)
-        if (PriorAlpha[1]<1 | PriorAlpha[2]<1){
-          stop('Error: The elements in Beta Prior must bigger than 1!')
+      if (is.numeric(PriorAlpha) & length(PriorAlpha)==2 & is.na(sum(PriorAlpha))==FALSE){  #Whether PriorAlpha=c(-1.9,1)
+        if (PriorAlpha[2]<=0){
+          stop('Error: The variance in Normal Prior must bigger than 0!')
         }else{
           PriorAlpha=PriorAlpha
         }
@@ -503,8 +503,8 @@ Input.Checking <- function(Model,
     if (Model=='1PLAG'){
     ###Checking Variable InitialAlpha###
       if (is.numeric(InitialAlpha) & length(InitialAlpha)==1){  #Whether InitialAlpha=0.2
-        if (InitialAlpha<=0 | InitialAlpha>0.707){
-          stop('Error: InitialAlpha must bigger than 0 and less than 0.707!')
+        if (InitialAlpha<=0 | InitialAlpha>0.4){
+          stop('Error: InitialAlpha must bigger than 0 and less than 0.4!')
         }else{
         InitialValue$Alpha=rep(InitialAlpha,J)
         }

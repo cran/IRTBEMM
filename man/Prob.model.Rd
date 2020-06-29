@@ -82,7 +82,7 @@ P.1plg=Prob.model(X=th, Model='1PLG', Par.est0=Par1PLG)   #Obtain the 1PLG proba
 
 #Obtain the correct probabilities of three 1PLAG model items when theta=0.3.
 Alpha=0.2
-Par1PLAG=list(Alpha=Alpha, Beta=Beta, Gamma=Gamma)     #Create a list for 1PLG
+Par1PLAG=list(Alpha=Alpha, Beta=Beta, Gamma=Gamma)     #Create a list for 1PLAG
 P.1plag=Prob.model(X=th, Model='1PLAG', Par.est0=Par1PLAG)   #Obtain the 1PLAG probabilities
 
 

@@ -1,8 +1,8 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-//BE3M function for 1PLAG
-void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
+//BEMM function for 1PLAG
+void BEMM1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *LH,
 			  double *IAlpha, double *IBeta, double *IGamma, 
 			  double *TAlpha, double *TBeta, double *TGamma, 
 			  double *deltahat_Alpha, double *deltahat_Beta, double *deltahat_Gamma,
@@ -116,7 +116,7 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 					lb1 += -(rz[k + nq * j] - f[k] * pstar);       					      //lb1: - (rz - f * ps)
 					lbb += -(f[k] * pstar * (1 - pstar)); 								  //lbb: - (f * ps*(1-ps))
 				}
-				// Maximize beta
+				// Maximize beta & gamma
 				if (PriorBeta[j]!=-9 && PriorBeta[j + J]!=-9) {
 					lb1 += -((bt0-PriorBeta[j])/PriorBeta[j + J]);
 					lbb += -1/PriorBeta[j + J];
@@ -128,7 +128,6 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 				if (fabs(bt1-bt0) >= 0.01){
 					bt0 = bt1;
 				}
-				// Maximize gamma
 				if (PriorGamma[j]!=-9 && PriorGamma[j + J]!=-9) {
 					lg1 += -((gt0-PriorGamma[j])/PriorGamma[j + J]);
 					lgg += -1/PriorGamma[j + J];
@@ -191,31 +190,31 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 			for (k = 0; k < nq; k++) {
 				for (j = 0; j < J; j++){
 					ag = 1 / (1 + exp(-(at0 * node_Quadpts[k] + Gamma[j])));
-					la1 += node_Quadpts[k] * (r[k + nq * j] - rz[k + nq * j] - (f[k] - fz[k + nq * j]) * ag); 
-																					  //la1: X*(r - rz - (f - fz)*ps)
-					laa += -node_Quadpts[k] * node_Quadpts[k] * (f[k] - fz[k + nq * j]) * ag * (1 - ag);					  
-				                                                                      //laa: -X*X*(f-fz)*(ag*(1-ag))
+					la1 += at0 * node_Quadpts[k] * (r[k + nq * j] - rz[k + nq * j] - (f[k] - fz[k + nq * j]) * ag); 
+																					  //la1: exp(log(at))*X*(r - rz - (f - fz)*ps)
+					laa += - at0 * at0 * node_Quadpts[k] * node_Quadpts[k] * (f[k] - fz[k + nq * j]) * ag * (1 - ag);					  
+				                                                                      //laa: -exp(2*log(at))*X*X*(f-fz)*(ag*(1-ag))
 				}
 			}
 			// Maximize alpha
 			if (PriorAlpha[0]!=-9 && PriorAlpha[1]!=-9) {
-				la1 += (PriorAlpha[0]-1)/at0 - (PriorAlpha[1]-1)/(1-at0);
-				laa += -(PriorAlpha[0]-1)/(at0*at0) - (PriorAlpha[1]-1)/((1-at0)*(1-at0));
+				la1 += -((log(at0)-PriorAlpha[0])/PriorAlpha[1]);
+				laa += -1/PriorAlpha[1];
 			}
 			Iaa = - 1 / laa;
-			at1 = at0 + (Iaa * la1);
+			at1 = log(at0) + (Iaa * la1);
 			la1 = 0;
 			laa = 0;
-			if (fabs(at1-at0) < 0.01){
-				at0 = at1;
+			if (fabs(at1-log(at0)) < 0.01){
+				at0 = exp(at1);
 				M_exit = 0;
 			} else{
-				at0 = at1;
+				at0 = exp(at1);
 				n_MCycle += 1;
 			}
 		}
 		if (isnormal(at0)){
-			if (at0>=0.001 && at0<=0.707){
+			if (at0>=0.001){
 				Alpha[0] = at0;
 				TAlpha[n_ECycle[0]] = at0;
 				IAlpha[0] = Iaa;
@@ -293,12 +292,23 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 	double delta[3]={0};
 	double delta0[3]={0};
 	double delta1[3]={0};
+	int cr_SEM=n_ECycle[0];
+	double cr_SEM0=1;
 	double cr_SEM1=1;
 	double cr_SEM2=1;
 	double cr_SEM3=1;
-	if (n_ECycle[0]>=10){
-		start_SEM=floor(n_ECycle[0] * 0.2);
-		end_SEM=floor(n_ECycle[0] * 0.8);
+	double deltatemp;
+	
+	for (i = 0; i<=cr_SEM; i++){
+		deltatemp=exp(-(LH[i+1]-LH[i]));
+		if (deltatemp>=0.9 && deltatemp<=0.999){
+			if (cr_SEM0==0){
+				end_SEM=i;
+			}else{
+				start_SEM=i;
+				cr_SEM0=0;
+			}
+		}
 	}
 	// Estimating SEs of alpha
 	z=start_SEM;
@@ -354,37 +364,37 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 			for (k = 0; k < nq; k++) {
 				for (j = 0; j < J; j++){
 					ag = 1 / (1 + exp(-(at0 * node_Quadpts[k] + Gamma[j])));
-					la1 += node_Quadpts[k] * (r[k + nq * j] - rz[k + nq * j] - (f[k] - fz[k + nq * j]) * ag); 
-																					  //la1: X*(r - rz - (f - fz)*ps)
-					laa += -node_Quadpts[k] * node_Quadpts[k] * (f[k] - fz[k + nq * j]) * ag * (1 - ag);					  
-																						 //laa: -X*X*(f-fz)*(ag*(1-ag))
+					la1 += at0 * node_Quadpts[k] * (r[k + nq * j] - rz[k + nq * j] - (f[k] - fz[k + nq * j]) * ag); 
+																					  //la1: exp(log(a))*X*(r - rz - (f - fz)*ps)
+					laa += - at0 * at0 * node_Quadpts[k] * node_Quadpts[k] * (f[k] - fz[k + nq * j]) * ag * (1 - ag);					  
+																						 //laa: -exp(2log(a))*X*X*(f-fz)*(ag*(1-ag))
 				}
 			}
 			// Maximize alpha
 			if (PriorAlpha[0]!=-9 && PriorAlpha[1]!=-9) {
-				la1 += (PriorAlpha[0]-1)/at0 - (PriorAlpha[1]-1)/(1-at0);
-				laa += -(PriorAlpha[0]-1)/(at0*at0) - (PriorAlpha[1]-1)/((1-at0)*(1-at0));
+				la1 += -((log(at0)-PriorAlpha[0])/PriorAlpha[1]);
+				laa += -1/PriorAlpha[1];
 			}
 			Iaa = - 1 / laa;
-			at1 = at0 + (Iaa * la1);
+			at1 = log(at0) + (Iaa * la1);
 			la1 = 0;
 			laa = 0;
-			if (fabs(at1-at0) < 0.01){
-				at0 = at1;
+			if (fabs(at1-log(at0)) < 0.01){
+				at0 = exp(at1);
 				M_exit = 0;
 			} else{
-				at0 = at1;
+				at0 = exp(at1);
 				n_MCycle += 1;
 			}
 		}
 		if (isnormal(at0)){
-			if (at0>=0.001 && at0<=0.707){
+			if (at0>=0.001){
 				deltahat_Alpha[0] = at0;
 			}
 		}
-		delta1[0]=(deltahat_Alpha[0]-Alpha[0])/(TAlpha[z]-Alpha[0]);
+		delta1[0]=(log(deltahat_Alpha[0])-log(Alpha[0]))/(log(TAlpha[z])-log(Alpha[0])+0.0001);
 		cr_SEM1=fabs(delta1[0]-delta0[0]);	
-		if (cr_SEM1<0.01 && z>=2){
+		if (cr_SEM1<0.0001 && z>=2){
 			SEM_exit=0;
 		}else{
 			z=z+1;
@@ -395,9 +405,9 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 	}
 	delta[0]=1-delta0[0];
 	delta1[0] =  1 / delta[0];
-	if (isnormal(delta1[0])==0){delta1[0] = 1;}
-	SEAlpha[0]= sqrt(fabs(IAlpha[0] * delta1[0]));
-	
+	if (isnormal(delta1[0])==0 || delta1[0]<=0){delta1[0] = 1;}
+	SEAlpha[0]= sqrt(Alpha[0] * Alpha[0] * IAlpha[0] * delta1[0]);
+	if (SEAlpha[0]>1){SEAlpha[0]= sqrt(IAlpha[0]);}
 	
 	// Estimating SEs of beta & gamma
 	for (jj = 0; jj < J; jj++) {
@@ -408,10 +418,10 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 		while (SEM_exit && z<=end_SEM){
 			mm = jj + J * z;
 			for (ParClass = 2; ParClass <= 3; ParClass++){
-				if (ParClass==2 && z>=2 && cr_SEM1<0.01){
+				if (ParClass==2 && z>=2 && cr_SEM1<0.0001){
 					continue;
 				}
-				if (ParClass==3 && z>=2 && cr_SEM2<0.01){
+				if (ParClass==3 && z>=2 && cr_SEM2<0.0001){
 					continue;
 				}
 				deltahat_Alpha[0]=Alpha[0];
@@ -546,16 +556,16 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 				}
 				switch (ParClass){
 					case 2:
-                        delta1[1]=(deltahat_Beta[jj]-Beta[jj])/(TBeta[mm]-Beta[jj]);
+                        delta1[1]=(deltahat_Beta[jj]-Beta[jj])/(TBeta[mm]-Beta[jj]+0.0001);
 						break;
 					case 3:
-                        delta1[2]=(deltahat_Gamma[jj]-Gamma[jj])/(TGamma[mm]-Gamma[jj]);   
+                        delta1[2]=(deltahat_Gamma[jj]-Gamma[jj])/(TGamma[mm]-Gamma[jj]+0.0001);   
 						break;	
 				}
 			}	
 			cr_SEM2=fabs(delta1[1]-delta0[1]);
 			cr_SEM3=fabs(delta1[2]-delta0[2]);
-			if (cr_SEM2<0.01 && cr_SEM3<0.01 && z>=2){
+			if (cr_SEM2<0.0001 && cr_SEM3<0.0001 && z>=2){
 				SEM_exit=0;
 			}else{
 				z=z+1;
@@ -570,9 +580,11 @@ void BE3M1PLAG(double *data, int *CountNum, int *n_class, int *n_item, double *L
 		delta[2]=1-delta0[2];
 		delta1[1] =  1 / delta[1];
 		delta1[2] =  1 / delta[2];
-		if (isnormal(delta1[1])==0){delta1[1] = 1;}
-		if (isnormal(delta1[2])==0){delta1[2] = 1;}
-		SEBeta[jj]= sqrt(fabs(IBeta[jj] * delta1[1]));
-		SEGamma[jj]= sqrt(fabs(IGamma[jj] * delta1[2]));
+		if (isnormal(delta1[1])==0 || delta1[1]<=0){delta1[1] = 1;}
+		if (isnormal(delta1[2])==0 || delta1[2]<=0){delta1[2] = 1;}
+		SEBeta[jj]= sqrt(IBeta[jj] * delta1[1]);
+		SEGamma[jj]= sqrt(IGamma[jj] * delta1[2]);
+		if (SEBeta[jj]>1){SEBeta[jj]= sqrt(IBeta[jj]);}
+		if (SEGamma[jj]>1){SEGamma[jj]= sqrt(IGamma[jj]);}	
 	}
 }

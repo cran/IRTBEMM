@@ -9,7 +9,7 @@ This function can estimate the item parameters of the 3PL model via Bayesian Exp
 \usage{
 BEMM.3PL(data, PriorA = c(0, 0.25), PriorB = c(0, 4), PriorC = c(4, 16), 
 	InitialA = NA, InitialB = NA, InitialC = NA, 
-	Tol = 0.001, max.ECycle = 2000L, max.MCycle = 30L, 
+	Tol = 0.0001, max.ECycle = 2000L, max.MCycle = 100L, 
 	n.decimal = 3L, n.Quadpts = 31L, Theta.lim = c(-6, 6), 
 	Missing = -9, ParConstraint = FALSE)
 }
@@ -65,13 +65,13 @@ The user specified starting values for item guessing (\emph{c}) parameters in th
 }
 }
 \item{Tol}{
-A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.001.
+A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.0001.
 }
 \item{max.ECycle}{
 A single \code{integer}, refers to maximum number of E-step cycles; defaults are 2000L.
 }
 \item{max.MCycle}{
-A single \code{integer}, refers to maximum number of M-step cycles; defaults are 30L.
+A single \code{integer}, refers to maximum number of M-step cycles; defaults are 100L.
 }
 \item{n.Quadpts}{
 A single \code{integer}, refers to number of quadrature points per dimension (must be larger than 5); defaults are 31L.

@@ -7,10 +7,10 @@ Applying the family of the Bayesian Expectation-Maximization-Maximization (BEMM)
 (4) one parameter logistic ability-based guessing (1PLAG) model proposed by San Martín et al (2006). 
 
 The BEMM family includes 
-(1) The BEMM algorithm for 3PL and 1PLG models (Guo, Wu, Zheng, & Wang, 2018; Guo & Zheng, 2019), and 
-(2) the Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm for 4PL and 1PLAG models 
-	(Zhang, Guo, & Zheng, 2018; Guo, Wu, Zheng, & Wang, 2018), and 
-(3) their maximum likelihood estimation versions (Zheng, Meng, Guo, & Liu, 2018). 
+(1) The BEMM algorithm for 3PL model (Guo & Zheng, 2019);
+(2) The BEMM algorithm for 4PL model (Zhang, Guo, & Zheng, 2018, April);
+(3) The BEMM algorithm for 1PL-AG and 1PL-G model (Guo, Wu, Zheng, & Wang, 2018);
+(4) Their maximum likelihood estimation versions (Zheng, Meng, Guo, & Liu, 2018). 
 
 Thus, both Bayesian modal estimates and maximum likelihood estimates are available.
 
@@ -59,8 +59,8 @@ Inside the package, the estimation routines can be viewed as:
 
   - `BEMM.3PL()`
   - `BEMM.1PLG()`
-  - `BE3M.4PL()`
-  - `BE3M.1PLAG()`
+  - `BEMM.4PL()`
+  - `BEMM.1PLAG()`
 ## Author
 
 Shaoyang Guo, Chanjin Zheng, Justin L Kern

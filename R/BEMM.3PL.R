@@ -5,9 +5,9 @@ BEMM.3PL=function(data, 				#A matrix of respoonse [n.examinees * n.items]
                  InitialA=NA,			#Initial values for a parameters, default is NA 
                  InitialB=NA,			#Initial values for b parameters, default is NA 
                  InitialC=NA,			#Initial values for c parameters, default is NA 
-                 Tol=0.001,				#The tolerate threshold for convergnece, default is 0.001
+                 Tol=0.0001,			#The tolerate threshold for convergnece, default is 0.0001
                  max.ECycle=2000L,		#The max of Estem interation, default is 2000L
-                 max.MCycle=30L,		#The max of Mstep interation, default is 30L
+                 max.MCycle=100L,		#The max of Mstep interation, default is 100L
                  n.decimal=3L,          #The decimal length of outputs parameters, default is 3L
                  n.Quadpts =31L,		#The number of quadratures, default is 31L
                  Theta.lim=c(-6,6),     #The range the Theta, default is [-6,6]
@@ -214,7 +214,7 @@ BEMM.3PL=function(data, 				#A matrix of respoonse [n.examinees * n.items]
   }else{
     message('PROCEDURE TERMINATED WITH ISSUES')
   }
-  message('IRTEMM version: 1.0.2') 
+  message('IRTEMM version: 1.0.3') 
   message('Item Parameter Calibration for the 3PLM.','\n')
   message('Quadrature: ', n.Quadpts, ' nodes from ', Theta.lim[1], ' to ', Theta.lim[2], ' were used to approximate Gaussian distribution.') 
   message('Method for Items: Ability-based Bayesian Expectation-Maximization-Maximization (BEMM) Algorithm.')

@@ -1,15 +1,15 @@
-\name{BE3M.4PL}
-\alias{BE3M.4PL}
+\name{BEMM.4PL}
+\alias{BEMM.4PL}
 \title{
-Calibrating 4PL model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm.
+Calibrating 4PL model via Bayesian Expectation-Maximization-Maximization (BEMM) algorithm.
 }
 \description{
-This function can estimate the item parameters of the 4PL model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm proposed by Zhang, Guo, & Zheng (2018, April). Both Bayesan modal estimates and maximum likelihood estimates are available. In addition, the examinees' ability and a few model fits information can be also obtained through this function.
+This function can estimate the item parameters of the 4PL model via Bayesian Expectation-Maximization-Maximization (BEMM) algorithm proposed by Zhang, Guo, & Zheng (2018, April). Both Bayesan modal estimates and maximum likelihood estimates are available. In addition, the examinees' ability and a few model fits information can be also obtained through this function.
 }
 \usage{
-BE3M.4PL(data, PriorA = c(0, 0.25), PriorB = c(0, 4), PriorC = c(4, 16), 
+BEMM.4PL(data, PriorA = c(0, 0.25), PriorB = c(0, 4), PriorC = c(4, 16), 
 	PriorS = c(4, 16), InitialA = NA, InitialB = NA, InitialC = NA, 
-	InitialS = NA, Tol = 0.001, max.ECycle = 2000L, max.MCycle = 30L, 
+	InitialS = NA, Tol = 0.0001, max.ECycle = 2000L, max.MCycle = 100L, 
 	n.decimal = 3L, n.Quadpts = 31L, Theta.lim = c(-6, 6), 
 	Missing = -9, ParConstraint = FALSE)
 }
@@ -81,13 +81,13 @@ The user specified starting values for item slipping (\emph{s}) parameters in th
 }
 }
 \item{Tol}{
-A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.001.
+A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.0001.
 }
 \item{max.ECycle}{
 A single \code{integer}, refers to maximum number of E-step cycles; defaults are 2000L.
 }
 \item{max.MCycle}{
-A single \code{integer}, refers to maximum number of M-step cycles; defaults are 30L.
+A single \code{integer}, refers to maximum number of M-step cycles; defaults are 100L.
 }
 \item{n.Quadpts}{
 A single \code{integer}, refers to number of quadrature points per dimension (must be larger than 5); defaults are 31L.
@@ -154,8 +154,8 @@ for (i in 1:I){
 #To save example running time, we set the Tol to 0.1
 #Obtain the Bayesian modal estimation (BME) using default priors
 
-#Estimate model via BE3M algorithm
-bme.res=BE3M.4PL(response, Tol=0.1) 
+#Estimate model via BEMM algorithm
+bme.res=BEMM.4PL(response, Tol=0.1) 
 
 bme.res$Est.ItemPars       #show item estimates
 bme.res$Est.Theta          #show ability estimates
@@ -166,8 +166,8 @@ bme.res$fits.test 		   #show model fits information
 
 #Obtain the maximum likelihood estimation (MLE) by setting Prior=NA
 
-#Estimate model via E3M algorithm
-mle.res=BE3M.4PL(response, Tol=0.1,
+#Estimate model via EMM algorithm
+mle.res=BEMM.4PL(response, Tol=0.1,
 		PriorA=NA, PriorB=NA, PriorC=NA, PriorS=NA)
 
 mle.res$Est.ItemPars       #show item estimates

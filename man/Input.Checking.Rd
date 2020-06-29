@@ -9,10 +9,10 @@ Based on the given model, checking whether user speciflied input variables are c
 \usage{
 Input.Checking(Model, data, 
 	PriorA=c(0,0.25), PriorB=c(0,4), PriorC=c(4,16), PriorS=c(4,16),
-	PriorAlpha=c(4,16), PriorBeta=c(0,4), PriorGamma=c(-1.39,0.25),
+	PriorAlpha=c(-1.9,1), PriorBeta=c(0,4), PriorGamma=c(-1.39,0.25),
 	InitialA=NA, InitialB=NA, InitialC=NA, InitialS=NA,
 	InitialAlpha=NA, InitialBeta=NA, InitialGamma=NA,
-	Tol=0.001, max.ECycle=1000L, max.MCycle=30L, n.Quadpts=31L, n.decimal=3L, 
+	Tol=0.0001, max.ECycle=1000L, max.MCycle=100L, n.Quadpts=31L, n.decimal=3L, 
 	Theta.lim=c(-6,6), Missing=-9, ParConstraint=FALSE)
 }
 \arguments{
@@ -71,9 +71,9 @@ The user specified \strong{Beta(x,y) distribution} prior for item slipping (\emp
 }
 }
 \item{PriorAlpha}{
-The user specified \strong{Beta(x,y) distribution} prior for the weight of the ability in the guessing component (\emph{alpha}) parameters in the 1PLAG model. Can be:
+The user specified \strong{normal distribution} prior for the logarithmic weight of the ability in the guessing component (\emph{ln(alpha})) parameter in the 1PLAG model. Can be:
 \itemize{	
-\item A \code{numeric} with two hyperparameters x and y of Beta distribution for all \emph{alpha} parameters. By default, PriorAlpha=c(4,16), which means a Beta prior of mean=4/(4+16)=0.2 and variance=0.008 will be used for the weight of the ability.
+\item A \code{numeric} with two hyperparameters normal distribution for all \emph{log(alpha)} parameters. By default, PriorAlpha=c(-1.9,1), which means a Normal prior of mean=-1.9 and variance=1 will be used for the logarithmic weight of the ability.
 \item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for the weight of the ability will be obtained.
 }
 }
@@ -149,13 +149,13 @@ The user specified starting values for item guessing (\emph{gamma}) parameters i
 }
 }
 \item{Tol}{
-A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.001.
+A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.0001.
 }
 \item{max.ECycle}{
 A single \code{integer}, refers to maximum number of E-step cycles; defaults are 2000L.
 }
 \item{max.MCycle}{
-A single \code{integer}, refers to maximum number of M-step cycles; defaults are 30L.
+A single \code{integer}, refers to maximum number of M-step cycles; defaults are 100L.
 }
 \item{n.Quadpts}{
 A single \code{integer}, refers to number of quadrature points per dimension (must be larger than 5); defaults are 31L.

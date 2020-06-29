@@ -109,7 +109,7 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 					lb1 += -(rz[k + nq * j] - f[k] * pstar);       					      //lb1: - (rz - f * ps)
 					lbb += -(f[k] * pstar * (1 - pstar)); 								  //lbb: - (f * ps * (1-ps))
 				}
-				// Maximize beta
+				// Maximize beta and gamma	
 				if (PriorBeta[j]!=-9 && PriorBeta[j + J]!=-9) {
 					lb1 += -((bt0-PriorBeta[j])/PriorBeta[j + J]);
 					lbb += -1/PriorBeta[j + J];
@@ -121,7 +121,7 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 				if (fabs(bt1-bt0) >= 0.01){
 					bt0 = bt1;
 				}
-				// Maximize gamma
+
 				if (PriorGamma[j]!=-9 && PriorGamma[j + J]!=-9) {
 					lg1 += -((gt0-PriorGamma[j])/PriorGamma[j + J]);
 					lgg += -1/PriorGamma[j + J];
@@ -241,11 +241,22 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 	double delta[2]={0};
 	double delta0[2]={0};
 	double delta1[2]={0};
+	int cr_SEM=n_ECycle[0];
+	double cr_SEM0=1;
 	double cr_SEM1=1;
 	double cr_SEM2=1;
-	if (n_ECycle[0]>=10){
-		start_SEM=floor(n_ECycle[0] * 0.2);
-		end_SEM=floor(n_ECycle[0] * 0.8);
+	double deltatemp;
+	
+	for (i = 0; i<=cr_SEM; i++){
+		deltatemp=exp(-(LH[i+1]-LH[i]));
+		if (deltatemp>=0.9 && deltatemp<=0.999){
+			if (cr_SEM0==0){
+				end_SEM=i;
+			}else{
+				start_SEM=i;
+				cr_SEM0=0;
+			}
+		}
 	}
 	
 	// Estimating SEs of beta & gamma
@@ -257,10 +268,10 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 		while (SEM_exit && z<=end_SEM){
 			mm = jj + J * z;
 			for (ParClass = 1; ParClass <= 2; ParClass++){
-				if (ParClass==1 && z>=2 && cr_SEM1<0.01){
+				if (ParClass==1 && z>=2 && cr_SEM1<0.0001){
 					continue;
 				}
-				if (ParClass==2 && z>=2 && cr_SEM2<0.01){
+				if (ParClass==2 && z>=2 && cr_SEM2<0.0001){
 					continue;
 				}
 				for (j = 0; j < J; j++){
@@ -394,16 +405,16 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 				}
 				switch (ParClass){
 					case 1:
-                        delta1[0]=(deltahat_Beta[jj]-Beta[jj])/(TBeta[mm]-Beta[jj]);
+                        delta1[0]=(deltahat_Beta[jj]-Beta[jj])/(TBeta[mm]-Beta[jj]+0.0001);
 						break;
 					case 2:
-                        delta1[1]=(deltahat_Gamma[jj]-Gamma[jj])/(TGamma[mm]-Gamma[jj]);   
+                        delta1[1]=(deltahat_Gamma[jj]-Gamma[jj])/(TGamma[mm]-Gamma[jj]+0.0001);   
 						break;	
 				}
 			}	
 			cr_SEM1=fabs(delta1[0]-delta0[0]);
 			cr_SEM2=fabs(delta1[1]-delta0[1]);
-			if (cr_SEM1<0.01 && cr_SEM2<0.01 && z>=2){
+			if (cr_SEM1<0.0001 && cr_SEM2<0.0001 && z>=2){
 				SEM_exit=0;
 			}else{
 				z=z+1;
@@ -418,10 +429,11 @@ void BEMM1PLG(double *data, int *CountNum, int *n_class, int *n_item, double *LH
 		delta[1]=1-delta0[1];
 		delta1[0] =  1 / delta[0];
 		delta1[1] =  1 / delta[1];
-		if (isnormal(delta1[0])==0){delta1[0] = 1;}
-		if (isnormal(delta1[1])==0){delta1[1] = 1;}
-		SEBeta[jj]= sqrt(fabs(IBeta[jj] * delta1[0]));
-		SEGamma[jj]= sqrt(fabs(IGamma[jj] * delta1[1]));
-		
+		if (isnormal(delta1[0])==0 || delta1[0]<=0){delta1[0] = 1;}
+		if (isnormal(delta1[1])==0 || delta1[1]<=0){delta1[1] = 1;}
+		SEBeta[jj]= sqrt(IBeta[jj] * delta1[0]);
+		SEGamma[jj]= sqrt(IGamma[jj] * delta1[1]);
+		if (SEBeta[jj]>1){SEBeta[jj]= sqrt(IBeta[jj]);}
+		if (SEGamma[jj]>1){SEGamma[jj]= sqrt(IGamma[jj]);}	
 	}
 }

@@ -1,26 +1,27 @@
-\name{BE3M.1PLAG}
-\alias{BE3M.1PLAG}
+\name{BEMM.1PLAG}
+\alias{BEMM.1PLAG}
 \title{
-Calibrating 1PLAG model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm.
+Calibrating 1PLAG model via Bayesian Expectation-Maximization-Maximization (BEMM) algorithm.
 }
 \description{
-This function can estimate the item parameters of the 1PLAG model via Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) algorithm proposed by Guo, Wu, Zheng, & Wang (2018, April). Both Bayesan modal estimates and maximum likelihood estimates are available. In addition, the examinees' ability and a few model fits information can be also obtained through this function.
+This function can estimate the item parameters of the 1PLAG model via Bayesian Expectation-Maximization-Maximization (BEMM) algorithm proposed by Guo, Wu, Zheng, & Wang (2018, April). Both Bayesan modal estimates and maximum likelihood estimates are available. In addition, the examinees' ability and a few model fits information can be also obtained through this function.
 }
 \usage{
-BE3M.1PLAG(data, PriorAlpha = c(4, 16), PriorBeta = c(0, 4), PriorGamma = c(-1.39, 0.25), 
-	InitialAlpha = NA, InitialBeta = NA, InitialGamma = NA, 
-	Tol = 0.001, max.ECycle = 2000L, max.MCycle = 30L, 
-	n.decimal = 3L, n.Quadpts = 31L, Theta.lim = c(-6, 6), 
-	Missing = -9, ParConstraint = FALSE)
+BEMM.1PLAG(data, PriorAlpha = c(-1.9, 1), PriorBeta = c(0, 4), 
+	PriorGamma = c(-1.39, 0.25), InitialAlpha = NA, 
+	InitialBeta = NA, InitialGamma = NA, Tol = 0.0001, 
+	max.ECycle = 2000L, max.MCycle = 100L, n.decimal = 3L, 
+	n.Quadpts = 31L, Theta.lim = c(-6, 6), Missing = -9, 
+	ParConstraint = FALSE)
 }
 \arguments{
 \item{data}{
 A \code{matrix} or \code{data.frame} consists of dichotomous data (1 for correct and 0 for wrong response), with missing data coded as in Missing (by default, Missing=-9). Each row of data represents a examinne' responses, and each column represents an item.
 }
 \item{PriorAlpha}{
-The user specified \strong{Beta(x,y) distribution} prior for the weight of the ability in the guessing component (\emph{alpha}) parameters in the 1PLAG model. Can be:
+The user specified \strong{normal distribution} prior for the logarithmic weight of the ability in the guessing component (\emph{ln(alpha})) parameter in the 1PLAG model. Can be:
 \itemize{	
-\item A \code{numeric} with two hyperparameters x and y of Beta distribution for all \emph{alpha} parameters. By default, PriorAlpha=c(4,16), which means a Beta prior of mean=4/(4+16)=0.2 and variance=0.008 will be used for the weight of the ability.
+\item A \code{numeric} with two hyperparameters normal distribution for all \emph{log(alpha)} parameters. By default, PriorAlpha=c(-1.9,1), which means a Normal prior of mean=-1.9 and variance=1 will be used for the logarithmic weight of the ability.
 \item A \code{NA}, refers to no priors will be used, so maximum likelihood estimates for the weight of the ability will be obtained.
 }
 }
@@ -64,13 +65,13 @@ The user specified starting values for item guessing (\emph{gamma}) parameters i
 }
 }
 \item{Tol}{
-A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.001.
+A single number (\code{numeric}), refers to convergence threshold for E-step cycles; defaults are 0.0001.
 }
 \item{max.ECycle}{
 A single \code{integer}, refers to maximum number of E-step cycles; defaults are 2000L.
 }
 \item{max.MCycle}{
-A single \code{integer}, refers to maximum number of M-step cycles; defaults are 30L.
+A single \code{integer}, refers to maximum number of M-step cycles; defaults are 100L.
 }
 \item{n.Quadpts}{
 A single \code{integer}, refers to number of quadrature points per dimension (must be larger than 5); defaults are 31L.
@@ -136,8 +137,8 @@ for (i in 1:I){
 #To save example running time, we set the Tol to 0.1
 #Obtain the Bayesian modal estimation (BME) using default priors
 
-#Estimate model via BE3M algorithm
-bme.res=BE3M.1PLAG(response, Tol=0.1) 
+#Estimate model via BEMM algorithm
+bme.res=BEMM.1PLAG(response, Tol=0.1) 
 
 bme.res$Est.ItemPars         #show item estimates
 bme.res$Est.Theta            #show ability estimates
@@ -148,8 +149,8 @@ bme.res$fits.test 		     #show model fits information
 
 #Obtain the maximum likelihood estimation (MLE) by setting Prior=NA
 
-#Estimate model via E3M algorithm
-mle.res=BE3M.1PLAG(response, PriorAlpha=NA, PriorBeta=NA, PriorGamma=NA, Tol=0.1) 
+#Estimate model via EMM algorithm
+mle.res=BEMM.1PLAG(response, PriorAlpha=NA, PriorBeta=NA, PriorGamma=NA, Tol=0.1) 
 
 mle.res$Est.ItemPars       #show item estimates
 mle.res$Est.Theta          #show ability estimates

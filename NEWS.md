@@ -1,3 +1,12 @@
+# IRTBEMM 1.0.3
+
+- Change the name from BE3M to BEMM for 4PLM and 1PL-AG model.
+- Change the default priors for Alpha parameter in 1PL-AG model from Beta to Normal.
+- Optimize the Supplemented EM algorithm.
+- Update the citation.
+- Fix some bugs in calculating the number of estimated parameters.
+
+
 # IRTBEMM 1.0.2
 
 - Change function cat() to message() in following R files: BE3M.1PLAG.R, BE3M.4PL.R, BEMM.1PLG.R, BEMM.3PL.R.

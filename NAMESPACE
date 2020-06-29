@@ -1,9 +1,9 @@
 useDynLib(IRTBEMM, .registration = TRUE)
 
-export(BE3M.1PLAG)
+export(BEMM.1PLAG)
 export(BEMM.1PLG)
 export(BEMM.3PL)
-export(BE3M.4PL)
+export(BEMM.4PL)
 export(Input.Checking)
 export(Prob.model)
 importFrom("stats", "aggregate", "cor", "dnorm", "pchisq", "qnorm","rbinom")

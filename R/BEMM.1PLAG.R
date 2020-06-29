@@ -1,13 +1,13 @@
-BE3M.1PLAG=function(data, 					#A matrix of respoonse [n.examinees * n.items]
-                 PriorAlpha=c(4,16), 	    #The log normal prior for alpha parameters with default mean 0 and variance 0.25
+BEMM.1PLAG=function(data, 					#A matrix of respoonse [n.examinees * n.items]
+                 PriorAlpha=c(-1.9,1), 	    #The log normal prior for alpha parameters with default mean -1.9 and variance 1
                  PriorBeta=c(0,4),          #The normal prior for beta parameters with default mean 0 and variance 4
                  PriorGamma=c(-1.39,0.25),  #The normal prior for gamma parameters with default mean -1.39 and variance 0.25
                  InitialAlpha=NA,			#Initial values for alpha parameters, default is NA 
                  InitialBeta=NA,			#Initial values for beta parameters, default is NA 
                  InitialGamma=NA,			#Initial values for gamma parameters, default is NA 
-                 Tol=0.001,				    #The tolerate threshold for convergnece, default is 0.001
+                 Tol=0.0001,				#The tolerate threshold for convergnece, default is 0.0001
                  max.ECycle=2000L,		    #The max of Estem interation, default is 2000L
-                 max.MCycle=30L,		    #The max of Mstep interation, default is 30L
+                 max.MCycle=100L,		    #The max of Mstep interation, default is 100L
                  n.decimal=3L,              #The decimal length of outputs parameters, default is 3L
                  n.Quadpts =31L,		    #The number of quadratures, default is 31L
                  Theta.lim=c(-6,6),         #The range the Theta, default is [-6,6]
@@ -85,9 +85,9 @@ BE3M.1PLAG=function(data, 					#A matrix of respoonse [n.examinees * n.items]
   n.ECycle=0L					#The first E-step iteration
   StopNormal=1L					#Whether program terminate normally
   
-  #Call BE3M estimation program from C
+  #Call BEMM estimation program from C
   
-  res=.C("BE3M1PLAG", data.simple=data.simple, CountNum=CountNum, n.class=n.class, J=J,  LH=LH, 
+  res=.C("BEMM1PLAG", data.simple=data.simple, CountNum=CountNum, n.class=n.class, J=J,  LH=LH, 
          IAlpha=IAlpha, IBeta=IBeta, IGamma=IGamma, TAlpha=TAlpha, TBeta=TBeta, TGamma=TGamma, 
          deltahat.Alpha=deltahat.Alpha, deltahat.Beta=deltahat.Beta, deltahat.Gamma=deltahat.Gamma,
          est.Alpha=Par.est0$Alpha, est.Beta=Par.est0$Beta, est.Gamma=Par.est0$Gamma, Tol=Tol, cr=cr, StopNormal=StopNormal,
@@ -141,7 +141,7 @@ BE3M.1PLAG=function(data, 					#A matrix of respoonse [n.examinees * n.items]
   
   
   #Compute model fit information
-  np=J*3		#Obtain the number of estimated parameters
+  np=J*2+1		#Obtain the number of estimated parameters
   N2loglike=-2*LogL			#-2Log-likelihood
   AIC=2*np+N2loglike		#AIC
   BIC=N2loglike+log(I)*np	#BIC
@@ -214,10 +214,10 @@ BE3M.1PLAG=function(data, 					#A matrix of respoonse [n.examinees * n.items]
   }else{
     message('PROCEDURE TERMINATED WITH ISSUES')
   }
-  message('IRTEMM version: 1.0.2') 
+  message('IRTEMM version: 1.0.3') 
   message('Item Parameter Calibration for the 1PL-AGM.','\n')
   message('Quadrature: ', n.Quadpts, ' nodes from ', Theta.lim[1], ' to ', Theta.lim[2], ' were used to approximate Gaussian distribution.') 
-  message('Method for Items: Ability-based Bayesian Expectation-Maximization-Maximization-Maximization (BE3M) Algorithm.')
+  message('Method for Items: Ability-based Bayesian Expectation-Maximization-Maximization (BEMM) Algorithm.')
   message('Method for Item SEs: Updated Supplemented EM.')
   message('Method for Theta: Expected A Posteriori (EAP).')
   if (StopNormal==1){
