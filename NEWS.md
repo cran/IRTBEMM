@@ -1,3 +1,6 @@
+# IRTBEMM 1.0.4
+- Fix some bugs in the process of the estimation.
+
 # IRTBEMM 1.0.3
 
 - Change the name from BE3M to BEMM for 4PLM and 1PL-AG model.
