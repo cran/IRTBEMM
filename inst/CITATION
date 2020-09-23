@@ -5,11 +5,14 @@ citEntry(entry  = "Article",
          author = c(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L. Kern")),
          journal= "Applied Psychological Measurement",
          year   = "2020",
+		 volume = "44",
+         number = "7-8",
+         pages  = "566–567",
          doi    = "10.1177/0146621620932654",
          url    = "http://dx.doi.org/10.1177/0146621620932654",
     textVersion = paste("Shaoyang G., Chanjin Z. & Justin L. K, (2020).",
                          "IRTBEMM: An R Package for Estimating IRT Models With Guessing or Slipping Parameters,",
-                         "Applied Psychological Measurement,",
+                         "Applied Psychological Measurement, 44(7-8), 566–567.",
                          "DOI: 10.1177/0146621620932654")
 )
 

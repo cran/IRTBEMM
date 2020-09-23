@@ -1,5 +1,3 @@
-useDynLib(IRTBEMM, .registration = TRUE)
-
 export(BEMM.1PLAG)
 export(BEMM.1PLG)
 export(BEMM.3PL)

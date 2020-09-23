@@ -13,7 +13,7 @@ Input.Checking(Model, data,
 	InitialA=NA, InitialB=NA, InitialC=NA, InitialS=NA,
 	InitialAlpha=NA, InitialBeta=NA, InitialGamma=NA,
 	Tol=0.0001, max.ECycle=1000L, max.MCycle=100L, n.Quadpts=31L, n.decimal=3L, 
-	Theta.lim=c(-6,6), Missing=-9, ParConstraint=FALSE)
+	Theta.lim=c(-6,6), Missing=-9, ParConstraint=FALSE, BiasSE=FALSE)
 }
 \arguments{
 \item{Model}{A \code{character} to declare the type of items to be modeled. The parameter labels follow conventional use, can be:
@@ -171,6 +171,9 @@ A single number (\code{numeric}) to indicate which elements are missing; default
 }
 \item{ParConstraint}{
 A logical value to indicate whether estimates parametes in a reasonable range; default is FALSE. If ParConstraint=TRUE: \emph{a} in [0.001, 6], \emph{b} in [-6, 6], \emph{c} in [0.0001, 0.5], \emph{s} in [0.0001, c], \emph{alpha} in [0, 0.707], \emph{beta} in [-6, 6], \emph{gamma} in [-7, 0].
+}
+\item{BiasSE}{
+A logical value to determine whether directly estimating SEs from inversed Hession matrix rather than USEM method, default is FALSE.
 }
 }
 

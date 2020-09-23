@@ -11,7 +11,7 @@ BEMM.3PL(data, PriorA = c(0, 0.25), PriorB = c(0, 4), PriorC = c(4, 16),
 	InitialA = NA, InitialB = NA, InitialC = NA, 
 	Tol = 0.0001, max.ECycle = 2000L, max.MCycle = 100L, 
 	n.decimal = 3L, n.Quadpts = 31L, Theta.lim = c(-6, 6), 
-	Missing = -9, ParConstraint = FALSE)
+	Missing = -9, ParConstraint = FALSE, BiasSE=FALSE)
 }
 \arguments{
 \item{data}{
@@ -88,6 +88,9 @@ A single number (\code{numeric}) to indicate which elements are missing; default
 \item{ParConstraint}{
 A logical value to indicate whether estimates parametes in a reasonable range; default is FALSE. If ParConstraint=TRUE: \emph{a} in [0.001, 6], \emph{b} in [-6, 6], \emph{c} in [0.0001, 0.5].
 }
+\item{BiasSE}{
+A logical value to determine whether directly estimating SEs from inversed Hession matrix rather than USEM method, default is FALSE.
+}
 }
 \details{
 Three parameter logistic (3PL) model proposed by Birnbaum(1968):
@@ -121,7 +124,7 @@ Zheng, C., Meng, X., Guo, S., & Liu, Z. (2018). Expectation-Maximization-Maximiz
 #generate true values and response matrix
 set.seed(10)
 library(IRTBEMM)
-I=1000    #set the number of examinees is 1000
+I=500    #set the number of examinees is 500
 J=10      #set the number of items is 10
 true.a=runif(J,0.4,2)      #simulate true discrimination parameters
 true.b=rnorm(J,0,1)     #simulate true difficulty parameters

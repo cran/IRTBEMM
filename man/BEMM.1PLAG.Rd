@@ -12,7 +12,7 @@ BEMM.1PLAG(data, PriorAlpha = c(-1.9, 1), PriorBeta = c(0, 4),
 	InitialBeta = NA, InitialGamma = NA, Tol = 0.0001, 
 	max.ECycle = 2000L, max.MCycle = 100L, n.decimal = 3L, 
 	n.Quadpts = 31L, Theta.lim = c(-6, 6), Missing = -9, 
-	ParConstraint = FALSE)
+	ParConstraint = FALSE, BiasSE=FALSE)
 }
 \arguments{
 \item{data}{
@@ -88,6 +88,9 @@ A single number (\code{numeric}) to indicate which elements are missing; default
 \item{ParConstraint}{
 A logical value to indicate whether estimates parametes in a reasonable range; default is FALSE. If ParConstraint=TRUE: \emph{alpha} in [0, 0.707], \emph{beta} in [-6, 6], \emph{gamma} in [-7, 0].
 }
+\item{BiasSE}{
+A logical value to determine whether directly estimating SEs from inversed Hession matrix rather than USEM method, default is FALSE.
+}
 }
 \details{
 One parameter logsitc ability-based guessing (1PLAG) model proposed by San Martín et al.(2006). Let \emph{invlogit(x)=1 / (1 + exp(-x))}:
@@ -120,7 +123,7 @@ San Martín, E., Del Pino, G., & De Boeck, P. (2006). IRT models for ability-bas
 #generate true values and response matrix
 set.seed(10)
 library(IRTBEMM)
-I=2500    #set the number of examinees is 2500
+I=500    #set the number of examinees is 500
 J=10      #set the number of items is 10
 true.alpha=0.2 #simulate true weight parameters
 true.beta=rnorm(J,0,1)     #simulate true difficulty parameters

@@ -1,20 +1,26 @@
 Prob.model<- function(X, Model, Par.est0, D=1.702){
-  if (Model=='3PL' || Model =='4PL' || Model =='1PLAG' || Model =='1PLG'){
-	  if (Model=='3PL'){
-		Prob=Par.est0$C+(1-Par.est0$C)/(1+exp(-D*Par.est0$A*(X-Par.est0$B)))    #the prob of 3PLM
+  if (Model=='Rasch' || Model=='2PL' || Model =='3PL' || Model =='4PL' || Model =='1PLAG' || Model =='1PLG'){
+    if (Model=='Rasch'){
+      Prob=1/(1+exp(-(X-Par.est0$B)))    #the prob of 3PLM
+    }
+    if (Model=='2PL'){
+      Prob=1/(1+exp(-D*Par.est0$A*(X-Par.est0$B)))    #the prob of 3PLM
+    }
+    if (Model=='3PL'){
+		  Prob=Par.est0$C+(1-Par.est0$C)/(1+exp(-D*Par.est0$A*(X-Par.est0$B)))    #the prob of 3PLM
 	  }
 	  if (Model=='4PL'){
-		Prob=Par.est0$C+(1-Par.est0$S-Par.est0$C)/(1+exp(-D*Par.est0$A*(X-Par.est0$B)))    #the prob of 4PLM
+		  Prob=Par.est0$C+(1-Par.est0$S-Par.est0$C)/(1+exp(-D*Par.est0$A*(X-Par.est0$B)))    #the prob of 4PLM
 	  }
 	  if (Model=='1PLAG'){
-		P.1pl=1/(1+exp(-(X-Par.est0$Beta)))    #the prob of 1PLM
-		P.ag=1/(1+exp(-(Par.est0$Alpha*X+Par.est0$Gamma)))    #the prob of ability-based guessing
-		Prob=P.1pl+(1-P.1pl)*P.ag    #the prob of 1PLAG
+		  P.1pl=1/(1+exp(-(X-Par.est0$Beta)))    #the prob of 1PLM
+		  P.ag=1/(1+exp(-(Par.est0$Alpha*X+Par.est0$Gamma)))    #the prob of ability-based guessing
+		  Prob=P.1pl+(1-P.1pl)*P.ag    #the prob of 1PLAG
 	  }
 	  if (Model=='1PLG'){
-		P.1pl=1/(1+exp(-(X-Par.est0$Beta)))    #the prob of 1PLM
-		P.g=1/(1+exp(-(Par.est0$Gamma)))    #the prob of ability-based guessing
-		Prob=P.1pl+(1-P.1pl)*P.g    #the prob of 1PLAG
+		  P.1pl=1/(1+exp(-(X-Par.est0$Beta)))    #the prob of 1PLM
+		  P.g=1/(1+exp(-(Par.est0$Gamma)))    #the prob of ability-based guessing
+		  Prob=P.1pl+(1-P.1pl)*P.g    #the prob of 1PLAG
 	  }
 	  
 	  Prob[Prob>0.9999]=0.9999   #constrain the max value to 0.9999
@@ -22,13 +28,13 @@ Prob.model<- function(X, Model, Par.est0, D=1.702){
 	  
 	  return(Prob)  
   }else{
-	stop('The Model user specified does not exist!')
+	  stop('The Model user specified does not exist!')
   }
 }
 
 ###Checking whether the input variables satisfy the requirements###
 Input.Checking <- function(Model, 
-                            data, 
+              data, 
 							PriorA=c(0,0.25), 
 							PriorB=c(0,4), 
 							PriorC=c(4,16), 
@@ -50,7 +56,8 @@ Input.Checking <- function(Model,
 							n.decimal=3L,
 							Theta.lim=c(-6,6), 
 							Missing=-9, 
-							ParConstraint=FALSE){
+							ParConstraint=FALSE,
+							BiasSE=FALSE){
   
   ###Checking data###
   if (is.data.frame(data)){
@@ -69,35 +76,35 @@ Input.Checking <- function(Model,
         stop('Error: Some elements in data are not 1, 0 or Missing!')
       }else{
         if (sum(data==Missing)!=0){
-			Index.miss=which(data==Missing, arr.ind = T)
-			data[data==Missing]=0
-			PI=rowMeans(data)
-			PJ=colMeans(data)
-			for (i in 1:nrow(Index.miss)){
-				PI.tmp=PI[Index.miss[i,1]]
-				PJ.tmp=PJ[Index.miss[i,2]]
-				P.correct=0.5+PI.tmp-PJ.tmp
-				if (is.na(P.correct)){
-					data[Index.miss[i,1],Index.miss[i,2]]=0
-				}else{
-					if (P.correct>=1){
-						data[Index.miss[i,1],Index.miss[i,2]]=1
-					}else{
-						if (P.correct<=0){
-							data[Index.miss[i,1],Index.miss[i,2]]=0
-						}else{
-							data[Index.miss[i,1],Index.miss[i,2]]=rbinom(1,1,P.correct)
-						}
-					}
-				}
-			}
+			    Index.miss=which(data==Missing, arr.ind = T)
+			    data[data==Missing]=0
+			    PI=rowMeans(data)
+			    PJ=colMeans(data)
+			    for (i in 1:nrow(Index.miss)){
+				    PI.tmp=PI[Index.miss[i,1]]
+				    PJ.tmp=PJ[Index.miss[i,2]]
+				    P.correct=0.5+PI.tmp-PJ.tmp
+				    if (is.na(P.correct)){
+					    data[Index.miss[i,1],Index.miss[i,2]]=0
+				    }else{
+					    if (P.correct>=1){
+						    data[Index.miss[i,1],Index.miss[i,2]]=1
+					    }else{
+						    if (P.correct<=0){
+							    data[Index.miss[i,1],Index.miss[i,2]]=0
+						    }else{
+							    data[Index.miss[i,1],Index.miss[i,2]]=rbinom(1,1,P.correct)
+						    }
+					    }
+				    }
+			    }
         }
-		datafull=as.data.frame(data)
-		data.class=data.matrix(aggregate(list(Num=rep(1,I)), datafull, length))
-		data.simple=as.numeric(data.class[,1:J])
-		n.class=as.integer(nrow(data.class))
-		CountNum=as.integer(data.class[,J+1])
-		data.list=list(data=data, data.simple=data.simple, CountNum=CountNum, n.class=n.class, I=I, J=J)
+		    datafull=as.data.frame(data)
+		    data.class=data.matrix(aggregate(list(Num=rep(1,I)), datafull, length))
+	    	data.simple=t(data.class[,1:J])
+		    n.class=as.integer(nrow(data.class))
+		    CountNum=as.integer(data.class[,J+1])
+		    data.list=list(data=data, data.simple=data.simple, CountNum=CountNum, n.class=n.class, I=I, J=J)
       }
     }
   }else{
@@ -686,8 +693,53 @@ Input.Checking <- function(Model,
     stop('Error: The length of ParConstraint must be 1!')
   }  
   
+  ###Checking Variable BiasSE###
+  if (length(BiasSE)==1){
+    if (is.logical(BiasSE)==F){
+      stop('Error: The type of BiasSE must be logical!')
+    }else{
+      if (BiasSE){BiasSE=list(BiasSE=1L)}else{BiasSE=list(BiasSE=0L)}
+    }
+  }else{
+    stop('Error: The length of BiasSE must be 1!')
+  }  
   
-  return(c(data.list, Prior.list, InitialValue, Integer.tot, ParConstraint))
+  return(c(data.list, Prior.list, InitialValue, Integer.tot, ParConstraint, BiasSE))
 }
+
+LikelihoodInfo<- function(data.simple, CountNum, Model, Par.est0, n.Quadpts, node.Quadpts, weight.Quadpts, D){
+  #The correct and wrong prob for each quadpts
+  P.Quadpts=lapply(node.Quadpts, Prob.model, Model=Model, Par.est0=Par.est0, D=D)
+  Joint.prob=mapply('*',lapply(P.Quadpts, function(P,data){apply(data*P+(1-data)*(1-P),2,prod,na.rm = T)}, data=data.simple),
+                    weight.Quadpts, SIMPLIFY = FALSE)
+  Whole.prob=Reduce("+", Joint.prob)
+  LH=sum(log(Whole.prob)*CountNum)      #calculate the loglikelihood
+  Posterior.prob=lapply(Joint.prob, '/', Whole.prob=Whole.prob)
+  Par.est0$C[Par.est0$C>=0.5]=0.4
+  
+  f=simplify2array(lapply(lapply(Posterior.prob, "*", CountNum), sum, na.rm=T))
+  r=simplify2array(lapply(lapply(lapply(Posterior.prob, '*', t(data.simple)), '*', CountNum), colSums, na.rm=T))
+  if (Model=='3PL'){
+    Pstar=lapply(node.Quadpts, Prob.model, Model='2PL', Par.est0=Par.est0, D=D)
+    EZ=lapply(mapply('/', Pstar, P.Quadpts, SIMPLIFY = FALSE),'*',data.simple)
+  }
+  if (Model=='4PL'){
+    Pstar=lapply(node.Quadpts, Prob.model, Model='2PL', Par.est0=Par.est0, D=D)
+    EZ0=lapply(mapply('/',lapply(Pstar,'*',(1 - Par.est0$S)), P.Quadpts, SIMPLIFY = FALSE), '*', data.simple) 
+    EZ1=lapply(mapply('/',lapply(Pstar,'*',Par.est0$S), lapply(P.Quadpts,function(P){1-P}), SIMPLIFY = FALSE), '*', 1-data.simple) 
+    EZ = mapply('+', EZ0, EZ1, SIMPLIFY = FALSE)
+  }
+  if (Model=='1PLG' || Model=='1PLAG'){
+    Pstar=lapply(node.Quadpts, Prob.model, Model='Rasch', Par.est0=Par.est0, D=D)
+    EZ=lapply(mapply('/', Pstar, P.Quadpts, SIMPLIFY = FALSE),'*',data.simple)
+  }
+  EZ.core=mapply('*', lapply(EZ,'t'), Posterior.prob, SIMPLIFY = FALSE)
+  fz=simplify2array(lapply(lapply(EZ.core, '*', CountNum), colSums, na.rm=T))
+  rz=simplify2array(lapply(lapply(lapply(EZ.core, '*', t(data.simple)), '*', CountNum), colSums, na.rm=T))
+  
+  #calculate the posterior probability
+  return(list(LH=LH, f=f, r=r, fz=fz, rz=rz))
+}
+
 
 
