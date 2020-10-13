@@ -93,6 +93,7 @@ This function will return a list includes following:
 \item{EM.Map}{The parameter estimation history of iterations.}
 \item{fits.test}{The model fits information includes G2 test, AIC, BIC and RMSEA.}
 \item{Elapsed.time}{The running time of the program.}
+\item{InitialValues}{The initial values of item parameters.}
 }
 }
 \references{

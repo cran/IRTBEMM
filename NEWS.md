@@ -1,3 +1,6 @@
+# IRTBEMM 1.0.6
+- Fix some bugs about inital values.
+
 # IRTBEMM 1.0.5
 - Using the vectorized computation to accelerate the process of the estimation.
 - Fix some bugs in the linux environment.

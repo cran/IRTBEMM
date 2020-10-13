@@ -405,12 +405,12 @@ Input.Checking <- function(Model,
       if (InitialA<=0){
         stop('Error: InitialA must bigger than 0!')
       }else{
-        InitialValue$A=rep(InitialA,J)
+        InitialValue$InitialA=rep(InitialA,J)
       }
     }else{
       if (is.numeric(InitialA) & length(InitialA)==J){       #Whether InitialA=rep(1,J)
         for (j in 1:J){
-          if (is.na(InitialA[j])==FALSE){InitialValue$A[j]=InitialA[j]}
+          if (is.na(InitialA[j])==FALSE){InitialValue$InitialA[j]=InitialA[j]}
         }
       }else{
         if (length(InitialA)==1){
@@ -425,15 +425,11 @@ Input.Checking <- function(Model,
     
     ###Checking Variable InitialB###
     if (is.numeric(InitialB) & length(InitialB)==1){  #Whether InitialB=1
-      if (InitialB<=0){
-        stop('Error: InitialB must bigger than 0!')
-      }else{
-        InitialValue$B=rep(InitialB,J)
-      }
+        InitialValue$InitialB=rep(InitialB,J)
     }else{
       if (is.numeric(InitialB) & length(InitialB)==J){       #Whether InitialB=rep(1,J)
         for (j in 1:J){
-          if (is.na(InitialB[j])==FALSE){InitialValue$B[j]=InitialB[j]}
+          if (is.na(InitialB[j])==FALSE){InitialValue$InitialB[j]=InitialB[j]}
         }
       }else{
         if (length(InitialB)==1){
@@ -451,13 +447,13 @@ Input.Checking <- function(Model,
       if (InitialC<=0 | InitialC>=0.5){
         stop('Error: InitialC must bigger than 0 and less than 0.5!')
       }else{
-        InitialValue$C=rep(InitialC,J)
+        InitialValue$InitialC=rep(InitialC,J)
       }
     }else{
       if (is.numeric(InitialC) & length(InitialC)==J){       #Whether InitialC=rep(1,J)
         for (j in 1:J){
           if (is.na(InitialC[j])==FALSE & InitialC[j]<0.5){
-            InitialValue$C[j]=InitialC[j]
+            InitialValue$InitialC[j]=InitialC[j]
           }else{
             stop('Error: InitialC must bigger than 0 and less than 0.5!')
           }
@@ -480,13 +476,13 @@ Input.Checking <- function(Model,
         if (InitialS<=0 | InitialS>0.5){
           stop('Error: InitialS must bigger than 0 and less than 0.5!')
         }else{
-          InitialValue$S=rep(InitialS,J)
+          InitialValue$InitialS=rep(InitialS,J)
         }
       }else{
         if (is.numeric(InitialS) & length(InitialS)==J){       #Whether InitialS=rep(1,J)
           for (j in 1:J){
             if (is.na(InitialS[j])==FALSE & InitialS[j]<0.5){
-              InitialValue$S[j]=InitialS[j]
+              InitialValue$InitialS[j]=InitialS[j]
             }else{
               stop('Error: InitialS must bigger than 0 and less than 0.5!')
             }
@@ -513,7 +509,7 @@ Input.Checking <- function(Model,
         if (InitialAlpha<=0 | InitialAlpha>0.4){
           stop('Error: InitialAlpha must bigger than 0 and less than 0.4!')
         }else{
-        InitialValue$Alpha=rep(InitialAlpha,J)
+        InitialValue$InitialAlpha=rep(InitialAlpha,J)
         }
       }else{
         if (length(InitialAlpha)==1){
@@ -528,15 +524,11 @@ Input.Checking <- function(Model,
     
     ###Checking Variable InitialBeta###
     if (is.numeric(InitialBeta) & length(InitialBeta)==1){  #Whether InitialBeta=1
-      if (InitialBeta<=0){
-        stop('Error: InitialBeta must bigger than 0!')
-      }else{
-        InitialValue$Beta=rep(InitialBeta,J)
-      }
+        InitialValue$InitialBeta=rep(InitialBeta,J)
     }else{
       if (is.numeric(InitialBeta) & length(InitialBeta)==J){       #Whether InitialBeta=rep(1,J)
         for (j in 1:J){
-          if (is.na(InitialBeta[j])==FALSE){InitialValue$Beta[j]=InitialBeta[j]}
+          if (is.na(InitialBeta[j])==FALSE){InitialValue$InitialBeta[j]=InitialBeta[j]}
         }
       }else{
         if (length(InitialBeta)==1){
@@ -551,15 +543,15 @@ Input.Checking <- function(Model,
     
     ###Checking Variable InitialGamma###
     if (is.numeric(InitialGamma) & length(InitialGamma)==1){  #Whether InitialGamma=1
-      if (InitialGamma<=0){
-        stop('Error: InitialGamma must bigger than 0!')
+      if (InitialGamma>0){
+        stop('Error: InitialGamma must smaller than 0!')
       }else{
-        InitialValue$Gamma=rep(InitialGamma,J)
+        InitialValue$InitialGamma=rep(InitialGamma,J)
       }
     }else{
       if (is.numeric(InitialGamma) & length(InitialGamma)==J){       #Whether InitialGamma=rep(1,J)
         for (j in 1:J){
-          if (is.na(InitialGamma[j])==FALSE){InitialValue$Gamma[j]=InitialGamma[j]}
+          if (is.na(InitialGamma[j])==FALSE){InitialValue$InitialGamma[j]=InitialGamma[j]}
         }
       }else{
         if (length(InitialGamma)==1){

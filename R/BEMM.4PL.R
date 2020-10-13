@@ -111,6 +111,7 @@ BEMM.4PL.est=function(Model=Model, data=data, data.simple=data.simple, CountNum=
   weight.Quadpts=weight.Quadpts/sum(weight.Quadpts)
   
   #Initializing the program settings
+  InitialValues=Par.est0    #InitialValues
   LH=rep(0,max.ECycle)		#Log-likelihood
   IA=rep(0,J)  #EM iteration history for inverse second derivative of a parameters
   IB=rep(0,J)  #EM iteration history for inverse second derivative of b parameters
@@ -613,5 +614,6 @@ BEMM.4PL.est=function(Model=Model, data=data, data.simple=data.simple, CountNum=
   Elapsed.time=paste('Elapsed time:', as.character(round(difftime(Time.End, Time.Begin, units="mins"), digits = 4)), 'mins')
   #Running time
   return(list(Est.ItemPars=Est.ItemPars, Est.Theta=Est.Theta, Loglikelihood=LogL, Iteration=n.ECycle, EM.Map=EM.Map,
-              fits.test=fits.test, Elapsed.time=Elapsed.time, StopNormal=StopNormal, cr=cr))
+              fits.test=fits.test, Elapsed.time=Elapsed.time, StopNormal=StopNormal, InitialValues=InitialValues, cr=cr))
 }
+ 

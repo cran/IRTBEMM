@@ -108,7 +108,9 @@ This function will return a list includes following:
 \item{EM.Map}{The parameter estimation history of iterations.}
 \item{fits.test}{The model fits information includes G2 test, AIC, BIC and RMSEA.}
 \item{Elapsed.time}{The running time of the program.}
-}}
+\item{InitialValues}{The initial values of item parameters.}
+}
+}
 \references{
 Birnbaum, A. (1968). \emph{Some latent trait models and their use in inferring an examinee's ability}. In F. M. Lord & M. R. Novick (Eds.), Statistical theories of mental test scores (pp. 395-479). MA: Adison-Wesley.
 
