@@ -67,7 +67,7 @@ BEMM.1PLAG=function(data, 					#A matrix of response [n.examinees * n.items]
   }else{
     message('PROCEDURE TERMINATED WITH ISSUES')
   }
-  message('IRTEMM version: 1.0.5') 
+  message('IRTEMM version: 1.0.7') 
   message('Item Parameter Calibration for the 1PL-AG Model.','\n')
   message('Quadrature: ', n.Quadpts, ' nodes from ', Theta.lim[1], ' to ', Theta.lim[2], ' were used to approximate Gaussian distribution.') 
   message('Method for Items: Ability-based Bayesian Expectation-Maximization-Maximization (BEMM) Algorithm.')
@@ -360,8 +360,7 @@ BEMM.1PLAG.est=function(Model=Model, data=data, data.simple=data.simple, CountNu
     delta1[1] =  1 / delta[1]
     if (is.finite(delta1[1])==0 || delta1[1]<=0){delta1[1] = 1}
     Par.SE0$SEAlpha= sqrt(Par.est0$Alpha * Par.est0$Alpha * IAlpha * delta1[1])
-    if (Par.SE0$SEAlpha>1){Par.SE0$SEAlpha= sqrt(Par.est0$Alpha * Par.est0$Alpha * IAlpha)}
-    
+    if (is.finite(Par.SE0$SEAlpha)){if (Par.SE0$SEAlpha>1){Par.SE0$SEAlpha= sqrt(Par.est0$Alpha * Par.est0$Alpha * IAlpha)}}
     #Estimating SEs of beta & gamma
     for (j in 1:J){
       z=start.SEM
@@ -469,8 +468,8 @@ BEMM.1PLAG.est=function(Model=Model, data=data, data.simple=data.simple, CountNu
       if (is.finite(delta1[3])==F || delta1[3]<=0){delta1[3] = 0}
       Par.SE0$SEBeta[j]= sqrt(IBeta[j] * delta1[2])
       Par.SE0$SEGamma[j]= sqrt(IGamma[j] * delta1[3])
-      if (Par.SE0$SEBeta[j]>1){Par.SE0$SEBeta[j]= sqrt(IBeta[j])}
-      if (Par.SE0$SEGamma[j]>1){Par.SE0$SEGamma[j]= sqrt(IGamma[j])}
+      if (is.finite(Par.SE0$SEBeta[j])){if (Par.SE0$SEBeta[j]>1){Par.SE0$SEBeta[j]= sqrt(IBeta[j])}}
+      if (is.finite(Par.SE0$SEGamma[j])){if (Par.SE0$SEGamma[j]>1){Par.SE0$SEGamma[j]= sqrt(IGamma[j])}}
     }
   }else{
     message('Directly estimating SEs from inversed Hession matrix.', '\n')

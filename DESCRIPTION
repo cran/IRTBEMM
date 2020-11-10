@@ -1,8 +1,8 @@
 Package: IRTBEMM
 Type: Package
 Title: Family of Bayesian EMM Algorithm for Item Response Models
-Version: 1.0.6
-Date: 2020-10-13
+Version: 1.0.7
+Date: 2020-11-09
 Authors@R: c(person("Shaoyang", "Guo", role = c("aut", "cre", "cph"),
                       email = "syguo1992@outlook.com"),
                person("Chanjin", "Zheng", role = "aut"),
@@ -11,11 +11,11 @@ Description: Applying the family of the Bayesian Expectation-Maximization-Maximi
 License: GPL (>= 2)
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2020-10-13 10:12:27 UTC; syguo1992
+Packaged: 2020-11-10 04:33:56 UTC; syguo1992
 Encoding: UTF-8
 Author: Shaoyang Guo [aut, cre, cph],
   Chanjin Zheng [aut],
   Justin L Kern [aut]
 Maintainer: Shaoyang Guo <syguo1992@outlook.com>
 Repository: CRAN
-Date/Publication: 2020-10-13 10:40:02 UTC
+Date/Publication: 2020-11-10 06:20:02 UTC

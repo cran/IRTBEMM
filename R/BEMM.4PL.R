@@ -69,7 +69,7 @@ BEMM.4PL=function(data, 				          #A matrix of response [n.examinees * n.ite
   }else{
     message('PROCEDURE TERMINATED WITH ISSUES')
   }
-  message('IRTEMM version: 1.0.5') 
+  message('IRTEMM version: 1.0.7') 
   message('Item Parameter Calibration for the 4PLM.','\n')
   message('Quadrature: ', n.Quadpts, ' nodes from ', Theta.lim[1], ' to ', Theta.lim[2], ' were used to approximate Gaussian distribution.') 
   message('Method for Items: Ability-based Bayesian Expectation-Maximization-Maximization (BEMM) Algorithm.')
@@ -499,10 +499,10 @@ BEMM.4PL.est=function(Model=Model, data=data, data.simple=data.simple, CountNum=
       Par.SE0$SEB[j]= sqrt(IB[j] * delta1[4] + IAB[j] * delta1[2])
       Par.SE0$SEC[j]= sqrt(IC[j] * delta1[5])
       Par.SE0$SES[j]= sqrt(IS[j] * delta1[6])
-      if (Par.SE0$SEA[j]>1){Par.SE0$SEA[j]= sqrt(Par.est0$A[j] * Par.est0$A[j] * IA[j])}
-      if (Par.SE0$SEB[j]>1){Par.SE0$SEB[j]= sqrt(IB[j])}
-      if (Par.SE0$SEC[j]>1){Par.SE0$SEC[j]= sqrt(IC[j])}
-      if (Par.SE0$SES[j]>1){Par.SE0$SES[j]= sqrt(IS[j])}
+      if (is.finite(Par.SE0$SEA[j])){if (Par.SE0$SEA[j]>1){Par.SE0$SEA[j]= sqrt(Par.est0$A[j] * Par.est0$A[j] * IA[j])}}
+      if (is.finite(Par.SE0$SEB[j])){if (Par.SE0$SEB[j]>1){Par.SE0$SEB[j]= sqrt(IB[j])}}
+	  if (is.finite(Par.SE0$SEC[j])){if (Par.SE0$SEC[j]>1){Par.SE0$SEC[j]= sqrt(IC[j])}}
+      if (is.finite(Par.SE0$SES[j])){if (Par.SE0$SES[j]>1){Par.SE0$SES[j]= sqrt(IS[j])}}
     }
   }else{
     message('Directly estimating SEs from inversed Hession matrix.', '\n')

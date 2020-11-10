@@ -1,3 +1,6 @@
+# IRTBEMM 1.0.7
+- Fix some bugs in calculating SEs.
+
 # IRTBEMM 1.0.6
 - Fix some bugs about inital values.
 
