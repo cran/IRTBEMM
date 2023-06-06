@@ -1,3 +1,6 @@
+# IRTBEMM 1.0.8
+- Fix some invalid urls and ciations.
+
 # IRTBEMM 1.0.7
 - Fix some bugs in calculating SEs.
 

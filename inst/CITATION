@@ -1,8 +1,8 @@
 citHeader("To cite the package 'IRTBEMM' in publications use:")
 
-citEntry(entry  = "Article",
+bibentry(bibtype  = "Article",
          title  = "IRTBEMM: An R Package for Estimating IRT Models With Guessing or Slipping Parameters",
-         author = c(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L. Kern")),
+         author = c(c("Shaoyang Guo"), c("Chanjin Zheng"), c("Justin L. Kern")),
          journal= "Applied Psychological Measurement",
          year   = "2020",
 		 volume = "44",
@@ -16,9 +16,9 @@ citEntry(entry  = "Article",
                          "DOI: 10.1177/0146621620932654")
 )
 
-citEntry(entry = "Manual",
+bibentry(bibtype = "Manual",
          title        = "{IRTBEMM: Family of Bayesian EMM Algorithm for Item Response Models}",
-         author       = personList(as.person("Shaoyang Guo"), as.person("Chanjin Zheng"), as.person("Justin L Kern")
+         author       = c(c("Shaoyang Guo"), c("Chanjin Zheng"), c("Justin L Kern")
                                   ),
          year         = 2019,
          textVersion  = paste("Shaoyang, G., Chanjin Z., & Justin L Kern (2019)",
